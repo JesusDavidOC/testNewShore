@@ -1,0 +1,45 @@
+@import "@/assets/palette.scss";
+
+.bg-firstColor{
+    background-color: $FirstColor;
+}
+
+.color-secondColor{
+    color: $SecondColor !important;
+}
+
+.fullWidth{      
+    margin: 0;
+    padding: 0;    
+}
+
+.title{
+    font-size: 2em;
+    font-weight: 600;
+}
+
+.subTitle{
+    font-size: 1.2em;
+    font-weight: bolder;
+}
+
+.contentText{
+    font-size: 0.9em;  
+    color: $FontColor;  
+}
+
+.v-center{
+    align-items: center!important;
+    display: flex;
+}
+
+.v-top{
+    align-items: flex-start!important;
+    display: flex;
+}
+
+.v-bot{
+    align-items: flex-end!important;
+    display: flex;
+}
+
