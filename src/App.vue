@@ -1,6 +1,13 @@
 <template>
   <div id="app">
-    <router-view />
+    <b-container fluid class="fullWidth">
+      <b-row class="fullWidth bg-firstColor" align-v="center" align-h="center">
+        <b-col class="fullWidth" sm="auto">
+          <NavBar />
+        </b-col>
+      </b-row>
+      <router-view />
+    </b-container>
   </div>
 </template>
 
@@ -16,3 +23,23 @@
   padding: 30px;
 }
 </style>
+
+<script>
+import { mapActions } from "vuex";
+import NavBar from "./components/NavBar";
+
+export default {
+  components: {
+    NavBar,
+  },
+
+  methods: {
+    ...mapActions({
+      readFirst: "characters/readFirst",
+    }),
+  },
+  mounted() {
+    this.readFirst();
+  },
+};
+</script>

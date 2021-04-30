@@ -6,6 +6,15 @@ export default {
   namespaced: true,
   state: () => ({
     list: [],
+    houses: [],
+    species: [],
+    genders: ["male", "female"],
+    filters: {
+      name: "",
+      house: "",
+      species: "",
+      gender: "",
+    },
   }),
   mutations,
   actions,
