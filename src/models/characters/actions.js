@@ -12,10 +12,21 @@ export default {
       });
     let houses = [];
     let species = [];
+    let listCounter = [];
     for (const index in state.list) {
       const element = state.list[index];
       if (!houses.includes(element.house) && element.house != "") {
         houses.push(element.house);
+        let temp = {};
+        temp[element.house] = 1;
+        listCounter.push(temp);
+      } else {
+        for (const key in listCounter) {
+          let counter = listCounter[key];
+          if (Object.keys(counter)[0] == element.house) {
+            listCounter[key][element.house]++;
+          }
+        }
       }
       if (!species.includes(element.species)) {
         species.push(element.species);
@@ -23,6 +34,7 @@ export default {
     }
     commit("setSpecies", species);
     commit("setHouses", houses);
+    commit("setCountByHouse", listCounter);
   },
 
   async read({ commit }, payload) {
@@ -37,7 +49,6 @@ export default {
   },
 
   async setFilters({ state, commit, dispatch }, payload) {
-    ("hola");
     let newList = [];
     if (payload.house != "") {
       await dispatch(
@@ -56,9 +67,14 @@ export default {
           state.list[key1].name
             .toLowerCase()
             .includes(payload.name.toLowerCase())) &&
-        (payload.gender == "" || state.list[key1].gender == payload.gender)
+        (payload.gender == "" || state.list[key1].gender == payload.gender) &&
+        (payload.rol == "" ||
+          (payload.rol == "Student" && state.list[key1].hogwartsStudent) ||
+          (payload.rol == "Staff" && state.list[key1].hogwartsStaff) ||
+          (payload.rol == "Other" &&
+            !state.list[key1].hogwartsStudent &&
+            !state.list[key1].hogwartsStaff))
       ) {
-        payload.name;
         newList.push(state.list[key1]);
       }
     }

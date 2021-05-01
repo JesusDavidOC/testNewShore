@@ -14,7 +14,8 @@
                 @click="setValue(item1, item.model)"
                 v-for="(item1, index1) in item.elements"
                 :key="index + index1"
-                >{{ item1 }}</b-dropdown-item
+                >{{ getNumber(item, item1, index1) }}
+                {{ item1 }}</b-dropdown-item
               >
             </b-nav-item-dropdown>
           </b-col>
@@ -50,6 +51,7 @@ export default {
         house: "",
         species: "",
         gender: "",
+        rol: "",
       },
       NavElements: [
         {
@@ -57,6 +59,12 @@ export default {
           type: "dropDown",
           elements: this.$store.state.characters.houses,
           model: "house",
+        },
+        {
+          name: "Rol",
+          type: "dropDown",
+          elements: ["Student", "Staff", "Other"],
+          model: "rol",
         },
         {
           name: "Gender",
@@ -83,6 +91,7 @@ export default {
       houses: (state) => state.characters.houses,
       species: (state) => state.characters.species,
       genders: (state) => state.characters.genders,
+      countByHouse: (state) => state.characters.countByHouse,
     }),
   },
   methods: {
@@ -95,6 +104,11 @@ export default {
         if (element.name.toLowerCase() == name.toLowerCase()) {
           return index;
         }
+      }
+    },
+    getNumber(item, item1, index1) {
+      if (item.model == "house") {
+        return `(${this.countByHouse[index1][item1]})`;
       }
     },
     toHome() {
@@ -110,17 +124,7 @@ export default {
       this.setFilters(this.filters1);
     },
   },
-  watch: {
-    filters1: {
-      handler: function (val, oldVal) {
-        if (val != oldVal) {
-          console.log(val);
-        }
-      },
-      deep: true,
-      immediate: true,
-    },
-  },
+
   created() {
     this.$store.watch(
       (state) => state.characters.houses,

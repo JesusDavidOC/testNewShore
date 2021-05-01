@@ -1,20 +1,21 @@
 <template>
-  <b-container v-if="character">
+  <b-container v-if="character != undefined" id="specificCharacter">
     <b-row class="nameCharacter" align-v="center" align-h="center">
       <b-col sm="auto">
         <h2 class="title">{{ character.name }}</h2>
       </b-col>
       <b-col sm="auto">
         <b-badge
-          :class="character.house.toLowerCase() + ' badgeCharacter'"
+          :class="lowerCase(character.house) + ' badgeCharacter'"
           v-if="character.house != ''"
           >{{ character.house }}</b-badge
         >
       </b-col>
     </b-row>
     <b-row class="characterPresentation" align-v="center" align-h="center">
+      <b-col class="fullWidth"></b-col>
       <b-col sm="4" class="fullWidth">
-        <img :src="character.image" alt="characterIMG" />
+        <img :src="character.image" alt="characterIMG" class="characterIMG" />
       </b-col>
       <b-col sm="auto" class="fullWidth characterData">
         <b-container>
@@ -40,8 +41,8 @@
                 <p class="subTitle">{{ firstCapital(item) + ": " }}</p>
               </b-col>
               <b-col sm="3" class="fullWidth value">
-                <p class="contentText value fullWidth">
-                  {{ character[item] }}
+                <p :class="' value fullWidth ' + lowerCase(character.house)">
+                  {{ firstCapital(character[item]) }}
                 </p>
               </b-col>
             </b-row>
@@ -51,16 +52,24 @@
               <p class="subTitle key">Rol:</p>
             </b-col>
             <b-col sm="3" class="fullWidth value">
-              <p class="contentText fullWidth" v-if="character.hogwartsStaff">
+              <p
+                :class="' value fullWidth ' + lowerCase(character.house)"
+                v-if="character.hogwartsStaff"
+              >
                 Hogwarts staff
               </p>
               <p
-                class="contentText fillWidth"
+                :class="' value fullWidth ' + lowerCase(character.house)"
                 v-else-if="character.hogwartsStudent"
               >
                 Hogwarts student
               </p>
-              <p class="contentText fillWidth" v-else>Other</p>
+              <p
+                :class="' value fullWidth ' + lowerCase(character.house)"
+                v-else
+              >
+                Other
+              </p>
             </b-col>
           </b-row>
         </b-container>
@@ -74,9 +83,24 @@
         "
       >
         <b-container>
+          <b-row align-v="center" align-h="center">
+            <p class="title">WAND</p>
+          </b-row>
+          <b-row align-v="center" align-h="center">
+            <b-col
+              sm="8"
+              :class="'horizontalLine ' + lowerCase(character.house)"
+            ></b-col>
+          </b-row>
           <b-row>
             <b-col sm="auto" id="wandContainer">
-              <img src="../assets/wand.svg" alt="magic wand" id="wand" />
+              <img
+                src="../assets/wand.svg"
+                alt="magic wand"
+                class="wandImage"
+                v-if="character.house"
+                :id="'wand' + lowerCase(character.house)"
+              />
             </b-col>
             <b-col sm="auto">
               <b-container>
@@ -91,13 +115,13 @@
                     {{ item }}:
                   </b-row>
                   <b-row
-                    class="tag Wand contentText"
+                    :class="' value fullWidth ' + lowerCase(character.house)"
                     v-if="character.wand[item] != '' && item == 'length'"
                   >
                     {{ character.wand[item] }}"
                   </b-row>
                   <b-row
-                    class="tag Wand contentText"
+                    :class="' value fullWidth ' + lowerCase(character.house)"
                     v-else-if="character.wand[item] != ''"
                   >
                     {{ character.wand[item] }}
@@ -108,6 +132,7 @@
           </b-row>
         </b-container>
       </b-col>
+      <b-col class="fullWidth"></b-col>
     </b-row>
   </b-container>
 </template>
@@ -127,12 +152,18 @@ export default {
   },
   methods: {
     firstCapital(text) {
-      let textChars = text.split("");
-      textChars[0] = textChars[0].toUpperCase();
-      return textChars.join().replaceAll(",", "");
+      var result = text.replace(/([A-Z])/g, " $1");
+      var finalResult = result.charAt(0).toUpperCase() + result.slice(1);
+      return finalResult;
+    },
+    lowerCase(text) {
+      return text.toLowerCase();
     },
   },
-  mounted() {
+  beforeMount() {
+    this.character = this.getCharacter(
+      this.$route.params.name.replace("-", " ")
+    );
     this.$store.watch(
       (state) => state.characters.list,
       (newValue, oldValue) => {
@@ -143,31 +174,45 @@ export default {
         }
       }
     );
-    try {
-      this.character = this.getCharacter(
-        this.$route.params.name.replace("-", " ")
-      );
-    } catch (e) {
-      e;
-    }
   },
 };
 </script>
 
 <style lang="scss" scoped>
+@import "@/assets/globalStyles.scss";
 .characterPresentation {
-  margin-top: 3em;
-  & img {
+  margin-top: 1em;
+  & .characterIMG {
     object-fit: cover;
-    width: 23em;
+    width: 20em;
     height: auto;
     object-position: top;
+    top: -1em;
+    position: relative;
   }
+}
+
+#specificCharacter {
+  background: linear-gradient(to bottom, $FontColor, white);
+  max-width: 100% !important;
 }
 
 .value {
   text-align: start;
   margin-left: 0.5em;
+  background-color: rgba(255, 255, 255, 0) !important;
+  &.gryffindor {
+    color: #740001 !important;
+  }
+  &.slytherin {
+    color: #2a623d;
+  }
+  &.hufflepuff {
+    color: $FontColor;
+  }
+  &.ravenclaw {
+    color: #222f5b;
+  }
 }
 .tag {
   margin-bottom: 0.5em !important;
@@ -183,18 +228,33 @@ export default {
 }
 
 .nameCharacter {
-  margin-top: 2em;
+  padding-top: 1em;
 }
 
 .badgeCharacter {
   font-size: 1.5em;
 }
 
-#wand {
-  width: 8em;
-  height: 8em;
+.wandImage {
+  width: 8em !important;
+  height: 8em !important;
   border-style: solid;
+  border-width: 0.5em;
   padding: 1em;
+  &#wand {
+    &gryffindor {
+      border-color: #740001 !important;
+    }
+    &slytherin {
+      border-color: #2a623d;
+    }
+    &hufflepuff {
+      border-color: #f0c75e;
+    }
+    &ravenclaw {
+      border-color: #222f5b;
+    }
+  }
 }
 
 #wandContainer {
@@ -203,5 +263,24 @@ export default {
 }
 .characterData {
   margin-right: 2em;
+}
+
+.horizontalLine {
+  &.gryffindor {
+    border-block-color: #740001 !important;
+    box-shadow: 1px 1px 3px 1px #740001 !important;
+  }
+  &.slytherin {
+    border-block-color: #2a623d !important;
+    box-shadow: 1px 1px 3px 1px #2a623d !important;
+  }
+  &.hufflepuff {
+    border-block-color: #f0c75e !important;
+    box-shadow: 1px 1px 3px 1px #f0c75e !important;
+  }
+  &.ravenclaw {
+    border-block-color: #222f5b !important;
+    box-shadow: 1px 1px 3px 1px #222f5b !important;
+  }
 }
 </style>

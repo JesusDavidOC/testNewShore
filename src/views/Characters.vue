@@ -38,12 +38,24 @@
         </b-row>
       </b-container>
     </b-row>
-    <b-row class="fullWidth" align-v="center" align-h="center">
+    <b-row
+      class="fullWidth"
+      align-v="center"
+      align-h="center"
+      v-if="list.length > 0"
+    >
       <CardCharacter
         v-for="(item, index) in list"
         :character="item"
         :key="'cardCharacter' + index"
       />
+    </b-row>
+
+    <b-row v-else align-v="center" align-h="center" class="fullWidth">
+      <img src="../assets/cap.png" alt="capMage" />
+      <p class="title">
+        !In Hogwarts there is not a mage with those characteristics¡
+      </p>
     </b-row>
   </b-container>
 </template>
@@ -94,7 +106,7 @@ export default {
         (state) => state.characters.filters[Object.keys(this.filters)[key]],
         (newValue, oldValue) => {
           if (newValue != oldValue) {
-            console.log(this.hasSomeFilter());
+            this.hasSomeFilter();
           }
         }
       );
@@ -122,21 +134,10 @@ export default {
     margin-bottom: 0%;
   }
   &.isCollapsed {
-    height: 7em;
+    height: 8em;
   }
   &.notCollapsed {
     height: 0;
   }
-}
-
-.horizontalLine {
-  border-bottom-style: solid;
-  border-width: 2px;
-  height: 0;
-  border-block-color: $FirstColor;
-  box-shadow: 1px 1px 3px 1px $FirstColor;
-  margin-top: 1em;
-  margin-bottom: 1em;
-  width: 60%;
 }
 </style>

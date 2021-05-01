@@ -6,7 +6,11 @@
           <NavBar />
         </b-col>
       </b-row>
-      <router-view />
+      <b-row class="fullWidth">
+        <b-col class="fullWidth" sm="12">
+          <router-view />
+        </b-col>
+      </b-row>
     </b-container>
   </div>
 </template>

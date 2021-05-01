@@ -12,4 +12,7 @@ export default {
   setFilters(state, payload) {
     state.filters = payload;
   },
+  setCountByHouse(state, payload) {
+    state.countByHouse = payload;
+  },
 };

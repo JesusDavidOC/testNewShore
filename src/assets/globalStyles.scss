@@ -44,17 +44,26 @@
     display: flex;
 }
 
-.badge {
-    &.gryffindor {
-        background-color: #740001 !important;
-    }
-    &.slytherin {
-        background-color: #2a623d;
-    }
-    &.hufflepuff {
-        background-color: #f0c75e;
-    }
-    &.ravenclaw {
-        background-color: #222f5b;
-    }
+.gryffindor {
+    background-color: #740001;    
+}
+.slytherin {
+    background-color: #2a623d;
+}
+.hufflepuff {
+    background-color: #f0c75e;
+    color: $FourthColor !important;
+}
+.ravenclaw {
+    background-color: #222f5b;
+}
+.horizontalLine {
+    border-bottom-style: solid;
+    border-width: 2px;
+    height: 0;
+    border-block-color: $FirstColor;
+    box-shadow: 1px 1px 3px 1px $FirstColor;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    width: 60%;
 }
